@@ -6,6 +6,7 @@ import { CheckCircle2, LogOut, UserRound } from "lucide-react";
 import { account, isAppwriteConfigured } from "@/lib/appwrite";
 import { hasSession, setSession } from "@/lib/storage";
 import { PageShell } from "./page-shell";
+import { useRouter } from "next/navigation";
 
 type Profile = {
   id: string;
@@ -22,6 +23,7 @@ const demoProfile: Profile = {
 };
 
 export function ProfilePage() {
+  const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [status, setStatus] = useState("Loading your profile…");
 
@@ -63,7 +65,7 @@ export function ProfilePage() {
       // Clear the local prototype session even if an Appwrite session is already absent.
     }
     setSession(false);
-    window.location.assign("/login");
+    router.push("/login");
   }
 
   if (!profile) {
@@ -93,7 +95,7 @@ export function ProfilePage() {
           <p className="text-xs font-bold uppercase tracking-widest text-[#0f7655]">
             Your account
           </p>
-          <h1 className="my-2 text-3xl font-extrabold tracking-tight text-[#152321] md:text-5xl">
+          <h1 className="my-2 text-2xl font-extrabold tracking-tight text-[#152321] md:text-3xl">
             {profile.name}
           </h1>
           <p className="max-w-xl text-sm font-medium text-[#5e6f68]">
@@ -165,4 +167,3 @@ export function ProfilePage() {
     </PageShell>
   );
 }
-

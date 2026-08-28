@@ -8,6 +8,7 @@ import {
   Clock3,
   FileText,
   Gavel,
+  IdCard,
   Info,
   Search,
   ShieldCheck,
@@ -15,6 +16,17 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { PageShell } from "./page-shell";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const catalog = [
   {
@@ -29,11 +41,11 @@ const catalog = [
         icon: FileText,
       },
       {
-        t: "Driving Licence Services",
-        d: "Guidance for new, renewal and duplicate licences.",
-        h: "/guides/driving-licence",
-        live: false,
-        icon: Info,
+        t: "Permanent Driving Licence (DL)",
+        d: "Apply for Permanent Driving Licence after approved Learner Licence.",
+        h: "/apply/permanent-licence",
+        live: true,
+        icon: IdCard,
       },
     ],
   },
@@ -49,25 +61,18 @@ const catalog = [
         icon: Car,
       },
       {
-        t: "Registration guidance",
-        d: "Understand RC services in simple language.",
-        h: "/guides/vehicle-services",
-        live: false,
-        icon: Info,
+        t: "Vehicle Transfer Service",
+        d: "Apply for online ownership transfer and RC endorsement.",
+        h: "/vehicles",
+        live: true,
+        icon: Car,
       },
     ],
   },
   {
     cat: "Visits & support",
-    description: "Manage appointments, challans and service issues.",
+    description: "Manage challans and service issues.",
     items: [
-      {
-        t: "Appointments",
-        d: "Book or manage a simulated RTO visit.",
-        h: "/appointments",
-        live: true,
-        icon: Clock3,
-      },
       {
         t: "eChallan",
         d: "Check and pay a fictional demonstration challan.",
@@ -102,7 +107,7 @@ export function Services() {
               Service catalogue
             </p>
 
-            <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl">
+            <h1 className="text-2xl font-extrabold tracking-tight text-white md:text-3xl">
               What can we help you with?
             </h1>
 
@@ -148,21 +153,17 @@ export function Services() {
                   const Icon = item.icon;
 
                   return (
-                    <Link
-                      href={item.h}
+                    <Card
                       key={item.t}
-                      className="group flex min-h-[220px] flex-col justify-between rounded-2xl border border-[#dce8e5] bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-[#167c74] hover:shadow-md"
+                      className="group flex min-h-[220px] flex-col justify-between transition-all hover:-translate-y-1 hover:border-[#167c74] hover:shadow-md"
                     >
-                      <div className="flex items-center justify-between">
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <div className="grid h-11 w-11 place-items-center rounded-xl bg-[#ddf3ef] text-[#167c74]">
                           <Icon size={22} />
                         </div>
-
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ${item.live
-                              ? "bg-[#e7f4ed] text-[#0d5c45]"
-                              : "bg-slate-100 text-[#5e6f68]"
-                            }`}
+                        <Badge
+                          variant={item.live ? "success" : "outline"}
+                          className="gap-1.5 font-bold"
                         >
                           {item.live ? (
                             <>
@@ -175,26 +176,34 @@ export function Services() {
                               Guidance only
                             </>
                           )}
-                        </span>
-                      </div>
+                        </Badge>
+                      </CardHeader>
 
-                      <div className="my-4">
-                        <h3 className="text-base font-bold text-[#152321] group-hover:text-[#167c74]">
+                      <CardContent className="my-2">
+                        <CardTitle className="text-base group-hover:text-[#167c74]">
                           {item.t}
-                        </h3>
-                        <p className="mt-1 text-xs leading-relaxed text-[#5e6f68]">
+                        </CardTitle>
+                        <CardDescription className="mt-1">
                           {item.d}
-                        </p>
-                      </div>
+                        </CardDescription>
+                      </CardContent>
 
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#167c74]">
-                        <span>{item.live ? "Start service" : "Read guidance"}</span>
-                        <ArrowRight
-                          size={15}
-                          className="transition-transform group-hover:translate-x-1"
-                        />
-                      </div>
-                    </Link>
+                      <CardFooter className="pt-2">
+                        <Button
+                          variant="link"
+                          className="p-0 text-xs font-bold text-[#167c74] group-hover:text-[#0d5c45]"
+                          asChild
+                        >
+                          <Link href={item.h} className="flex items-center gap-1.5">
+                            <span>{item.live ? "Start service" : "Read guidance"}</span>
+                            <ArrowRight
+                              size={15}
+                              className="transition-transform group-hover:translate-x-1"
+                            />
+                          </Link>
+                        </Button>
+                      </CardFooter>
+                    </Card>
                   );
                 })}
               </div>
@@ -216,143 +225,131 @@ export function VehicleCheck() {
 
   return (
     <PageShell>
-      <section className="tool-page content-wrap">
-        {/* INTRO */}
-        <div className="tool-intro">
-          <span className="tool-icon">
-            <Car />
-          </span>
-
-          <p className="eyebrow">Synthetic vehicle records</p>
-
-          <h1>Check a demo vehicle</h1>
-
-          <p>
-            Search a seeded fictional registration to see how vehicle
-            information could be presented.
+      {/* Intro Header */}
+      <section className="border-b border-[#dce8e5] bg-gradient-to-br from-[#f7fbfa] via-white to-[#edf7f4] py-12">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="flex items-center gap-3">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#167c74] text-white shadow-md">
+              <Car size={24} />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#0f7655]">
+                Synthetic Vehicle Records
+              </p>
+              <h1 className="my-1 text-2xl font-extrabold tracking-tight text-[#152321] md:text-3xl">
+                Check a demo vehicle
+              </h1>
+            </div>
+          </div>
+          <p className="mt-3 max-w-xl text-sm font-medium text-[#5e6f68]">
+            Search a seeded fictional vehicle registration number to inspect RC details, insurance validity, PUCC expiry and tax status.
           </p>
         </div>
+      </section>
 
-        {/* SEARCH */}
-        <div className="search-card">
-          <div className="search-card-heading">
+      <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
+        {/* Search Card */}
+        <div className="rounded-3xl border border-[#dce8e5] bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2>Vehicle registration</h2>
-              <p>
-                Try the demo registration{" "}
-                <strong>MH10AB1234</strong>
+              <h2 className="text-xl font-extrabold text-[#152321]">Vehicle Registration Search</h2>
+              <p className="mt-1 text-xs text-[#5e6f68]">
+                Try searching <strong className="text-[#167c74] font-bold">MH10AB1234</strong>
               </p>
             </div>
-
-            <span className="demo-label">DEMO</span>
+            <span className="w-fit rounded-md bg-[#fff1eb] px-3 py-1 text-[10px] font-extrabold text-[#a64524] tracking-wider">
+              DEMO RECORD ONLY
+            </span>
           </div>
 
-          <label htmlFor="vehicle-registration">
-            Registration number
-          </label>
-
-          <div className="search-input-row">
-            <div className="search-input">
-              <Car size={19} />
-
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="relative flex-1">
+              <Car className="absolute left-3.5 top-3.5 text-[#5e6f68]" size={19} />
               <input
                 id="vehicle-registration"
                 value={registration}
-                onChange={(e) =>
-                  setRegistration(
-                    e.target.value.toUpperCase().slice(0, 12)
-                  )
-                }
+                onChange={(e) => setRegistration(e.target.value.toUpperCase().slice(0, 12))}
                 placeholder="MH10AB1234"
+                className="h-12 w-full rounded-xl border border-[#cfe3dd] bg-[#f8fbf9] pl-11 pr-4 text-sm font-bold tracking-wider text-[#152321] uppercase outline-none focus:border-[#167c74] focus:bg-white focus:ring-4 focus:ring-[#ddf3ef]"
                 autoComplete="off"
               />
             </div>
-
             <button
               type="button"
-              className="button primary"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#167c74] px-6 text-sm font-bold text-white shadow-md shadow-[#167c74]/20 transition-all hover:bg-[#126b64]"
               onClick={handleSearch}
             >
               <Search size={18} />
-              Check record
+              Check Record
             </button>
           </div>
 
-          <div className="search-help">
-            <ShieldCheck size={15} />
-            <span>
-              No real vehicle database is searched.
-            </span>
+          <div className="mt-4 flex items-center gap-2 text-xs text-[#5e6f68]">
+            <ShieldCheck size={16} className="text-[#167c74]" />
+            <span>No government databases are queried. Data stays local in browser.</span>
           </div>
         </div>
 
-        {/* RESULT */}
+        {/* Result Card */}
         {searched && (
-          <div className="record-card">
-            <div className="record-head">
-              <div className="record-title">
-                <span className="badge">
-                  <CheckCircle2 size={14} />
-                  Demo vehicle record
+          <div className="rounded-3xl border border-[#cfe3dd] bg-white p-6 shadow-md sm:p-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-6">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e7f4ed] px-3 py-1 text-xs font-bold text-[#0d5c45]">
+                  <CheckCircle2 size={15} /> Verified Demo Record
                 </span>
-
-                <h2>Demo Hatchback</h2>
-
-                <p>
-                  {registration || "MH10AB1234"} · Petrol
+                <h2 className="mt-3 text-2xl font-black text-[#152321]">Demo Hatchback Car</h2>
+                <p className="text-xs font-semibold text-[#5e6f68] mt-0.5">
+                  Registration: <strong className="text-[#152321]">{registration || "MH10AB1234"}</strong> · Fuel: <strong className="text-[#152321]">Petrol</strong>
                 </p>
               </div>
 
-              <div className="record-status">
-                <ShieldCheck size={22} />
-                <span>Verified demo</span>
+              <div className="flex items-center gap-2 rounded-2xl bg-[#ddf3ef] px-4 py-3 text-[#167c74]">
+                <ShieldCheck size={24} />
+                <span className="text-xs font-extrabold">Active Status</span>
               </div>
             </div>
 
-            <div className="record-grid">
-              <div>
-                <span>Owner</span>
-                <strong>A**** K****</strong>
+            {/* Details Grid */}
+            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <div className="rounded-2xl border border-slate-100 bg-[#f9fbfb] p-4">
+                <span className="text-[11px] font-semibold text-[#5e6f68]">Owner Name</span>
+                <strong className="mt-1 block text-sm font-bold text-[#152321]">A**** K****</strong>
               </div>
 
-              <div>
-                <span>Registration validity</span>
-                <strong className="good">Valid</strong>
+              <div className="rounded-2xl border border-slate-100 bg-[#f9fbfb] p-4">
+                <span className="text-[11px] font-semibold text-[#5e6f68]">Registration Validity</span>
+                <strong className="mt-1 block text-sm font-bold text-[#0d5c45]">Valid till 04/08/2037</strong>
               </div>
 
-              <div>
-                <span>Insurance</span>
-                <strong>Until 10 Dec 2026</strong>
+              <div className="rounded-2xl border border-slate-100 bg-[#f9fbfb] p-4">
+                <span className="text-[11px] font-semibold text-[#5e6f68]">Insurance Status</span>
+                <strong className="mt-1 block text-sm font-bold text-[#0d5c45]">Active until 10 Dec 2026</strong>
               </div>
 
-              <div>
-                <span>PUCC</span>
-                <strong className="warn">
-                  Expires 12 Sep 2026
-                </strong>
+              <div className="rounded-2xl border border-slate-100 bg-[#fffbf8] p-4">
+                <span className="text-[11px] font-semibold text-[#5e6f68]">PUCC Certificate</span>
+                <strong className="mt-1 block text-sm font-bold text-[#a64524]">Expires 12 Sep 2026</strong>
               </div>
 
-              <div>
-                <span>Tax</span>
-                <strong className="good">Paid</strong>
+              <div className="rounded-2xl border border-slate-100 bg-[#f9fbfb] p-4">
+                <span className="text-[11px] font-semibold text-[#5e6f68]">Road Tax</span>
+                <strong className="mt-1 block text-sm font-bold text-[#0d5c45]">Paid Lifetime</strong>
               </div>
 
-              <div>
-                <span>Fitness</span>
-                <strong>Not applicable</strong>
+              <div className="rounded-2xl border border-slate-100 bg-[#f9fbfb] p-4">
+                <span className="text-[11px] font-semibold text-[#5e6f68]">RTO Location</span>
+                <strong className="mt-1 block text-sm font-bold text-[#152321]">MH-10 Sangli</strong>
               </div>
             </div>
 
-            <div className="result-note">
-              <Info size={17} />
-              <span>
-                This is synthetic information created for the Smart RTO
-                prototype.
-              </span>
+            <div className="mt-6 flex items-center gap-3 rounded-2xl bg-[#f0f7f5] p-4 text-xs font-semibold text-[#0f7655]">
+              <Info size={18} className="shrink-0" />
+              <span>This synthetic information is designed for demonstration of the Smart RTO interface.</span>
             </div>
           </div>
         )}
-      </section>
+      </div>
     </PageShell>
   );
 }
@@ -360,8 +357,7 @@ export function VehicleCheck() {
 export function ChallanCheck() {
   const [searched, setSearched] = useState(false);
   const [paid, setPaid] = useState(false);
-  const [challanNumber, setChallanNumber] =
-    useState("DEMO-CH-100023");
+  const [challanNumber, setChallanNumber] = useState("DEMO-CH-100023");
 
   function handleSearch() {
     setSearched(true);
@@ -370,164 +366,129 @@ export function ChallanCheck() {
 
   return (
     <PageShell>
-      <section className="tool-page content-wrap">
-        {/* INTRO */}
-        <div className="tool-intro">
-          <span className="tool-icon">
-            <Gavel />
-          </span>
-
-          <p className="eyebrow">Demo eChallan</p>
-
-          <h1>Check a fictional challan</h1>
-
-          <p>
-            Search a seeded challan and experience the payment flow without
-            making a real transaction.
+      {/* Intro Header */}
+      <section className="border-b border-[#dce8e5] bg-gradient-to-br from-[#f7fbfa] via-white to-[#edf7f4] py-12">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="flex items-center gap-3">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#167c74] text-white shadow-md">
+              <Gavel size={24} />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#0f7655]">
+                Demo eChallan Portal
+              </p>
+              <h1 className="my-1 text-2xl font-extrabold tracking-tight text-[#152321] md:text-3xl">
+                Check a fictional challan
+              </h1>
+            </div>
+          </div>
+          <p className="mt-3 max-w-xl text-sm font-medium text-[#5e6f68]">
+            Search seeded traffic challans and experience the simulated payment flow with zero real money.
           </p>
         </div>
+      </section>
 
-        {/* SEARCH */}
-        <div className="search-card">
-          <div className="search-card-heading">
+      <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
+        {/* Search Card */}
+        <div className="rounded-3xl border border-[#dce8e5] bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2>Find a challan</h2>
-              <p>
-                Try{" "}
-                <strong>DEMO-CH-100023</strong>
+              <h2 className="text-xl font-extrabold text-[#152321]">Search eChallan</h2>
+              <p className="mt-1 text-xs text-[#5e6f68]">
+                Try searching <strong className="text-[#167c74] font-bold">DEMO-CH-100023</strong>
               </p>
             </div>
-
-            <span className="demo-label">TEST MODE</span>
+            <span className="w-fit rounded-md bg-[#fff1eb] px-3 py-1 text-[10px] font-extrabold text-[#a64524] tracking-wider">
+              TEST PAYMENT SIMULATION
+            </span>
           </div>
 
-          <label htmlFor="challan-number">
-            Vehicle or challan number
-          </label>
-
-          <div className="search-input-row">
-            <div className="search-input">
-              <Gavel size={19} />
-
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="relative flex-1">
+              <Gavel className="absolute left-3.5 top-3.5 text-[#5e6f68]" size={19} />
               <input
                 id="challan-number"
                 value={challanNumber}
-                onChange={(e) =>
-                  setChallanNumber(
-                    e.target.value.toUpperCase().slice(0, 20)
-                  )
-                }
+                onChange={(e) => setChallanNumber(e.target.value.toUpperCase().slice(0, 20))}
                 placeholder="DEMO-CH-100023"
+                className="h-12 w-full rounded-xl border border-[#cfe3dd] bg-[#f8fbf9] pl-11 pr-4 text-sm font-bold tracking-wider text-[#152321] uppercase outline-none focus:border-[#167c74] focus:bg-white focus:ring-4 focus:ring-[#ddf3ef]"
                 autoComplete="off"
               />
             </div>
-
             <button
               type="button"
-              className="button primary"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#167c74] px-6 text-sm font-bold text-white shadow-md shadow-[#167c74]/20 transition-all hover:bg-[#126b64]"
               onClick={handleSearch}
             >
               <Search size={18} />
-              Search
+              Search Challan
             </button>
           </div>
 
-          <div className="search-help">
-            <ShieldCheck size={15} />
-            <span>
-              This prototype never accesses private government records.
-            </span>
+          <div className="mt-4 flex items-center gap-2 text-xs text-[#5e6f68]">
+            <ShieldCheck size={16} className="text-[#167c74]" />
+            <span>This prototype never connects to real payment gateways or government servers.</span>
           </div>
         </div>
 
-        {/* CHALLAN RESULT */}
+        {/* Result Card */}
         {searched && (
-          <div
-            className={
-              paid
-                ? "challan-card payment-success"
-                : "challan-card"
-            }
-          >
+          <div className="rounded-3xl border border-[#cfe3dd] bg-white p-6 shadow-md sm:p-8">
             {!paid ? (
-              <>
-                <div className="challan-main">
-                  <span className="badge">
-                    Demo / Mock service
+              <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff1eb] px-3 py-1 text-xs font-bold text-[#a64524]">
+                    Pending Challan · Demo
                   </span>
-
-                  <p className="challan-number">
-                    Challan {challanNumber}
-                  </p>
-
-                  <h2>Helmet violation — Demo</h2>
-
-                  <div className="challan-meta">
-                    <span>20 Aug 2026</span>
-                    <span>•</span>
-                    <span>Maharashtra</span>
-                  </div>
+                  <p className="font-mono text-xs font-bold text-[#5e6f68]">{challanNumber}</p>
+                  <h2 className="text-2xl font-black text-[#152321]">Helmet Violation — Demonstration</h2>
+                  <p className="text-xs text-[#5e6f68]">Location: Sangli Highway Circle · Date: 20 Aug 2026</p>
                 </div>
 
-                <div className="challan-payment">
-                  <span>Pending amount</span>
-
-                  <strong>₹500</strong>
-
-                  <small>
-                    Demonstration amount only
-                  </small>
+                <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#cfe3dd] bg-[#f7faf8] p-6 text-center">
+                  <span className="text-xs font-bold text-[#5e6f68]">Fine Amount</span>
+                  <strong className="text-4xl font-black text-[#152321]">₹500</strong>
+                  <small className="text-[10px] font-bold uppercase tracking-wider text-[#0f7655]">Mock Transaction</small>
 
                   <button
                     type="button"
-                    className="button primary"
+                    className="mt-2 w-full rounded-xl bg-[#167c74] py-3 px-6 text-sm font-bold text-white shadow-md shadow-[#167c74]/20 transition-all hover:bg-[#126b64]"
                     onClick={() => setPaid(true)}
                   >
-                    Pay test challan
+                    Pay Test Challan (₹500)
                   </button>
 
-                  <Link
-                    href="/grievance"
-                    className="secondary-action"
-                  >
-                    Raise grievance
-                    <ArrowRight size={15} />
+                  <Link href="/grievance" className="inline-flex items-center gap-1 text-xs font-bold text-[#167c74] hover:underline">
+                    Dispute / Raise Grievance <ArrowRight size={14} />
                   </Link>
                 </div>
-              </>
+              </div>
             ) : (
-              <div className="paid-state">
-                <div className="success-icon">
-                  <CheckCircle2 size={30} />
+              <div className="py-6 text-center">
+                <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#e7f4ed] text-[#0d5c45]">
+                  <CheckCircle2 size={38} />
                 </div>
-
-                <span className="badge success-badge">
-                  Test payment successful
-                </span>
-
-                <h2>Payment simulated successfully</h2>
-
-                <p>
-                  Your demonstration challan has been marked as paid.
-                  No real money was charged.
+                <h2 className="mt-4 text-2xl font-black text-[#152321]">Test Payment Successful!</h2>
+                <p className="mt-2 text-sm text-[#5e6f68]">
+                  Demonstration challan <strong className="font-bold text-[#152321]">{challanNumber}</strong> has been marked as paid.
                 </p>
 
-                <div className="payment-reference">
-                  <span>Test reference</span>
-                  <strong>TESTCH-2026-88421</strong>
+                <div className="mx-auto my-6 max-w-sm rounded-2xl border border-[#b9dfd4] bg-[#edf8f5] p-4 text-xs font-semibold text-[#0d5c45]">
+                  <p>Transaction ID: <strong className="font-bold">TESTCH-2026-88421</strong></p>
+                  <p className="mt-1">Date: {new Date().toLocaleDateString()}</p>
                 </div>
 
                 <Link
                   href="/services"
-                  className="button secondary"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#167c74] px-6 py-3 text-sm font-bold text-white transition-all hover:bg-[#126b64]"
                 >
-                  Back to services
+                  Return to Service Catalogue <ArrowRight size={16} />
                 </Link>
               </div>
             )}
           </div>
         )}
-      </section>
+      </div>
     </PageShell>
   );
 }
